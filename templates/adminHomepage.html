@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoPress Dashboard</title>
+    <link rel="stylesheet" href="../static/css/adminHomepage.css" />
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>EchoPress</h2>
+        <a href="/adminHomepage">Dashboard</a>
+        <a href="/searchAccount">Search Account</a>
+        <a href="/createUser">Create Moderators / Admins</a>
+        <a href="/updateUser">Update User Account</a>
+        <a href="/viewAllUsers">View All Users</a>
+        <a href="/manageUserStatus">Suspend / Reactivate / Delete</a>
+        <button onclick="toggleReports()">Reports ▸</button>
+        <div class="submenu" id="reports-submenu">
+            <a href="/newUsers">New Users</a>
+            <a href="/articleSubmissions">Article Submissions</a>
+            <a href="/loginActivity">Log in Activity</a>
+        </div>
+        <a href="#">Setting</a>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Top bar -->
+        <div class="topbar">
+            <h1>Dashboard</h1>
+            <div class="admin-menu">
+                <button class="admin-btn" onclick="toggleDropdown()">Admin ▼</button>
+                <div class="dropdown" id="admin-dropdown">
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="cards">
+            <div class="card">
+                <h3>{{ total_users }}</h3>
+                <p>Total Users</p>
+            </div>
+            <div class="card">
+                <h3>{{ new_users_today }}</h3>
+                <p>New Users Today</p>
+            </div>
+            <div class="card">
+                <h3>{{ suspended_users }}</h3>
+                <p>Suspended Users</p>
+            </div>
+            <div class="card">
+                <h3>{{ active_users }}</h3>
+                <p>Active Users</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            document.getElementById("admin-dropdown").style.display =
+                document.getElementById("admin-dropdown").style.display === "block"
+                    ? "none"
+                    : "block";
+        }
+
+        function toggleReports() {
+            const submenu = document.getElementById("reports-submenu");
+            submenu.style.display = submenu.style.display === "flex" ? "none" : "flex";
+        }
+
+        // Close dropdown if clicked outside
+        window.onclick = function (event) {
+            if (!event.target.matches('.admin-btn')) {
+                document.getElementById("admin-dropdown").style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>

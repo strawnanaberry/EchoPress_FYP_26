@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Suspend / Reactivate / Delete - EchoPress</title>
+  <link rel="stylesheet" href="../static/css/adminHomepage.css" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>EchoPress</h2>
+    <a href="/adminHomepage">Dashboard</a>
+    <a href="/searchAccount">Search Account</a>
+    <a href="/createUser">Create Moderators / Admins</a>
+    <a href="/updateUser">Update User Account</a>
+    <a href="/viewAllUsers">View All Users</a>
+    <a href="/manageUserStatus">Suspend / Reactivate / Delete</a>
+    <button onclick="toggleReports()">Reports ▸</button>
+    <div class="submenu" id="reports-submenu">
+        <a href="/newUsers">New Users</a>
+        <a href="/articleSubmissions">Article Submissions</a>
+        <a href="/loginActivity">Log in Activity</a>
+    </div>
+    <a href="#">Setting</a>
+</div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <h1>Suspend / Reactivate / Delete Users</h1>
+      <div class="admin-menu">
+        <button class="admin-btn" onclick="toggleDropdown()">Admin ▼</button>
+        <div class="dropdown" id="admin-dropdown">
+          <a href="/logout">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <h2>Manage User Accounts</h2>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for msg in messages %}
+              <p style="color: red;">{{ msg }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <table class="users-table">
+        <thead>
+            <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>User Type</th>
+            <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+            <td>{{ user.userID }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.usertype }}</td>
+            <td>
+                {% if user.usertype == "Admin" %}
+                <em>Admin accounts cannot be modified</em>
+                {% else %}
+                <form method="POST" action="/manageUserStatus" style="display:inline;">
+                    <input type="hidden" name="userID" value="{{ user.userID }}">
+                    <button type="submit" name="action" value="suspend">Suspend</button>
+                    <button type="submit" name="action" value="reactivate">Reactivate</button>
+                    <button type="submit" name="action" value="delete" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                </form>
+                {% endif %}
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+  </div>
+
+  <script>
+    function toggleDropdown() {
+      document.getElementById("admin-dropdown").style.display =
+        document.getElementById("admin-dropdown").style.display === "block"
+          ? "none"
+          : "block";
+    }
+
+    function toggleReports() {
+      const submenu = document.getElementById("reports-submenu");
+      submenu.style.display = submenu.style.display === "flex" ? "none" : "flex";
+    }
+
+    window.onclick = function (event) {
+      if (!event.target.matches('.admin-btn')) {
+        document.getElementById("admin-dropdown").style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
+
